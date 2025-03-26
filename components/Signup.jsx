@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,63 +12,99 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { gql, useMutation } from "@apollo/client";
 
-const LOGIN = gql`
-  mutation Login($email: String!, $username: String!, $password: String!) {
-    login(email: $email, username: $username, password: $password) {
+const SIGN_UP = gql`
+  mutation SignUp(
+    $firstname: String!
+    $lastname: String!
+    $email: String!
+    $username: String!
+    $password: String!
+  ) {
+    signup(
+      firstname: $firstname
+      lastname: $lastname
+      email: $email
+      username: $username
+      password: $password
+    ) {
       id
+      firstname
+      lastname
       email
       username
-      password
     }
   }
 `;
 
-export default function Login() {
+export default function SignUp() {
+  const [firstname, setFirstname] = React.useState("");
+  const [lastname, setLastname] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [login, { data, loading, error }] = useMutation(LOGIN);
+  const [signup, { data, loading, error }] = useMutation(SIGN_UP);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login({ variables: { email, username, password } });
+    await signup({
+      variables: { firstname, lastname, email, username, password },
+    });
   };
+
   return (
-    <div className=" flex justify-center  ">
+    <div className="flex justify-center">
       <Card className="w-[350px] shadow-xl flex flex-col justify-center">
         <CardHeader>
-          <CardTitle className="flex text-2xl justify-center text-center">
-            Login
-          </CardTitle>
-          <CardDescription className="flex justify-center text-center">
-            Welcome Back!!
+          <CardTitle className="text-2xl text-center">Sign Up</CardTitle>
+          <CardDescription className="text-center">
+            Create a new account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1">
+                <Label htmlFor="firstname">Firstname</Label>
+                <Input
+                  id="firstname"
+                  placeholder="Enter your firstname"
+                  value={firstname}
+                  onChange={(e) => setFirstname(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col space-y-1">
+                <Label htmlFor="lastname">Lastname</Label>
+                <Input
+                  id="lastname"
+                  placeholder="Enter your lastname"
+                  value={lastname}
+                  onChange={(e) => setLastname(e.target.value)}
+                />
+              </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Email</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  placeholder="Enter your username "
+                  type="email"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Username</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  placeholder="Enter your username "
+                  placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Password</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
+                  type="password"
                   placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -77,7 +112,7 @@ export default function Login() {
               </div>
             </div>
             <Button type="submit" className="w-full mt-3">
-              Login
+              Sign Up
             </Button>
           </form>
           <div className="mt-4">
@@ -89,7 +124,7 @@ export default function Login() {
             )}
             {data && (
               <p className="text-white font-medium p-3 bg-emerald-600 rounded-2xl">
-                welcome back {data.login.username}
+                {data.signup.username} created account successfully
               </p>
             )}
           </div>

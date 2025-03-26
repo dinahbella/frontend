@@ -16,8 +16,10 @@ const USERS = gql`
   query {
     users {
       id
-      name
+      firstname
+      lastname
       email
+      username
     }
   }
 `;
@@ -26,8 +28,10 @@ const GET_USER_BY_ID = gql`
   query GetUser($id: ID!) {
     user(id: $id) {
       id
-      name
+      firstname
+      lastname
       email
+      username
     }
   }
 `;
@@ -50,8 +54,10 @@ export function GetUsers() {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">#</TableHead>
-            <TableHead>Name</TableHead>
+            <TableHead>FirstName</TableHead>
+            <TableHead>LastName</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Username</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -62,8 +68,10 @@ export function GetUsers() {
               className="cursor-pointer hover:bg-gray-400"
             >
               <TableCell>{index + 1}</TableCell>
-              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.firstname}</TableCell>
+              <TableCell>{user.lastname}</TableCell>
               <TableCell>{user.email}</TableCell>
+              <TableCell>{user.username}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -83,10 +91,19 @@ export function GetUsers() {
             <strong>ID:</strong> {userDetail.user.id}
           </p>
           <p>
-            <strong>Name:</strong> {userDetail.user.name}
+            <strong>Firstname:</strong> {userDetail.user.firstname}
+          </p>{" "}
+          <p>
+            <strong>Lastname:</strong> {userDetail.user.lastname}
           </p>
           <p>
             <strong>Email:</strong> {userDetail.user.email}
+          </p>
+          <p>
+            <strong>Username:</strong> {userDetail.user.username}
+          </p>
+          <p>
+            <strong>Password:</strong> {userDetail.user.password}
           </p>
         </div>
       )}
